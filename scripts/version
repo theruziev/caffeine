@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+import click
+
+from caffeine import app_info
+
+
+@click.command()
+def get_version():
+    click.echo(click.style(app_info.release_name, blink=True, bold=True))
+
+
+if __name__ == '__main__':
+    get_version()

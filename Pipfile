@@ -1,0 +1,47 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+starlette = "*"
+pydantic = {extras = ["email", "typing_extensions"],version = "*"}
+passlib = {extras = ["bcrypt"],version = "*"}
+pyjwt = "*"
+environs = "*"
+uvicorn = "*"
+aiofiles = "*"
+pyyaml = "*"
+pendulum = "*"
+caffeine = {editable = true,path = "."}
+httpx = "*"
+async-sender = "*"
+jinja2 = "*"
+sentry-sdk = "*"
+casbin = "*"
+aiopg = "*"
+alembic = "*"
+aio-pubsub = "*"
+urouter = "*"
+
+[dev-packages]
+faker = "*"
+coverage = "*"
+pytest = "*"
+pytest-asyncio = "*"
+asynctest = "*"
+black = "*"
+requests = "*"
+flake8 = "*"
+mypy = "*"
+pytest-xdist = "*"
+flake8-bandit = "*"
+pep8-naming = "*"
+gitpython = "*"
+semver = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

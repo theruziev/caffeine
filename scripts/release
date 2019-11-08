@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+import click
+from click import UsageError
+
+from caffeine.deployment.release import get_current_release, get_commit_hash, new_version
+from caffeine.deployment.utils import dev_mode_only
+
+
+@click.command()
+@click.option('--bump', help="bump", type=click.Choice(['major', 'minor', 'patch']), required=True)
+@dev_mode_only
+def make_release(bump: str):
+    click.echo(f"current version: {click.style(get_current_release(), blink=True, bold=True)}")
+    new_version(bump, get_commit_hash())
+    click.echo(f"new version: {click.style(get_current_release(), blink=True, bold=True)}")
+    click.echo(click.style("All done! ✨ 🍰 ✨", blink=True, bold=True))
+
+
+if __name__ == '__main__':
+    make_release()

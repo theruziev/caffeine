@@ -1,0 +1,36 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection) or
+# paste cURL into the file and request will be converted to HTTP Request format.
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+POST http://localhost:8000/v1/user/register
+Content-Type: application/json
+
+{
+  "email": "example@mail.com",
+  "password": "Password$12",
+  "captcha": "recaptcha"
+}
+
+###
+
+POST http://localhost:8000/v1/user/reset-password
+Content-Type: application/json
+
+{
+  "email": "example@mail.com",
+  "captcha": "recaptcha"
+}
+
+###
+GET http://localhost:8000/v1/user/reset-password/8f1b429604379b315de95e34b217afc9
+
+###
+
+GET http://localhost:8000/v1/health
+Accept: application/json
+
+###

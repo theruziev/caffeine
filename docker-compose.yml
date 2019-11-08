@@ -1,0 +1,14 @@
+version: '3'
+services:
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "mailhog"
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+  postgresql:
+    container_name: "postgresql"
+    image: postgres
+    ports:
+      - 5432:5432
