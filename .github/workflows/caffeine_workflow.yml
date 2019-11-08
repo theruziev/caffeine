@@ -19,7 +19,7 @@ jobs:
         pip install pipenv
         python --version ; pip --version ; pipenv --version
         make install
-        ./scripts/version
+        pipenv run ./scripts/version
     - name: Lint code
       run: |
         make lint
