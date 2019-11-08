@@ -1,4 +1,3 @@
-from bson.errors import InvalidId
 from pendulum import now
 from starlette.requests import Request
 
@@ -186,5 +185,5 @@ class UserHandler(Handler):
     async def _get_user(self, uid: str) -> User:
         try:
             return await self.user_service.get_by_id(uid)
-        except (UserNotExistError, InvalidId):
+        except UserNotExistError:
             raise NotFoundError(f"User not found")

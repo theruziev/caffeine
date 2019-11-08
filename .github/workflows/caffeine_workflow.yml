@@ -18,11 +18,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install pipenv
         python --version ; pip --version ; pipenv --version
-        make install
-        pipenv run ./scripts/version
     - name: Lint code
       run: |
+        make install
         make lint
     - name: Test
       run: |
+        make install
         make test

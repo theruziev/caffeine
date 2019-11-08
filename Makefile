@@ -7,7 +7,6 @@ dco-rm:
 
 install:
 	pipenv install
-	pipenv install -e .
 
 migrate:
 	 pipenv run alembic upgrade head
