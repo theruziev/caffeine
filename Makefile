@@ -6,7 +6,7 @@ dco-rm:
 	 docker-compose rm -f
 
 install:
-	pipenv install
+	pipenv install --dev
 
 migrate:
 	 pipenv run alembic upgrade head
