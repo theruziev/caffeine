@@ -24,6 +24,7 @@ def app():
             app_router.get("/info", app_handler.app_info)
             app_router.get("/health", app_handler.health)
             return app_router
+
         router.mount("/v1/app", app_routes)
         router.export()
 

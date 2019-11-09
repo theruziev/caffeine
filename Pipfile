@@ -23,6 +23,7 @@ aiopg = "*"
 alembic = "*"
 aio-pubsub = "*"
 urouter = "*"
+click = "*"
 
 [dev-packages]
 faker = "*"
