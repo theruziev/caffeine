@@ -24,6 +24,7 @@ alembic = "*"
 aio-pubsub = "*"
 urouter = "==0.1.2"
 click = "*"
+gunicorn = "*"
 
 [dev-packages]
 faker = "*"
