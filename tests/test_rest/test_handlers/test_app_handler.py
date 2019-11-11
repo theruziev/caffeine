@@ -1,13 +1,13 @@
 import pytest
 from asynctest import Mock
 from starlette.applications import Starlette
-from starlette.routing import Router
 from starlette.testclient import TestClient
 from urouter.exporters.starlette_exporter import StarletteRouter
 
 from caffeine import app_info
 from caffeine.common.service.health.service import HealthService
 from caffeine.rest.handlers.app.handlers import AppHandler
+from caffeine.rest.handlers.app.routers import AppRouter
 from caffeine.rest.handlers.exception_handlers import ExceptionHandlers
 
 
@@ -18,14 +18,8 @@ def app():
         ExceptionHandlers(app)
         app_handler = AppHandler(health_service)
         router = StarletteRouter(app)
-
-        def app_routes():
-            app_router = router.make_router()
-            app_router.get("/info", app_handler.app_info)
-            app_router.get("/health", app_handler.health)
-            return app_router
-
-        router.mount("/v1/app", app_routes)
+        app_routers = AppRouter(app_handler, router)
+        router.mount("/v1/app", app_routers.init())
         router.export()
 
         return app
