@@ -1,5 +1,6 @@
 from logging.config import fileConfig
 
+from environs import Env
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -32,6 +33,12 @@ target_metadata = postgresql.db.metadata
 # ... etc.
 
 
+def get_url():
+    env = Env()
+    env.read_env()
+    return env("DB_DSN", "dbname=postgres user=postgres host=127.0.0.1")
+
+
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
 
@@ -44,7 +51,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,

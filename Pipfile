@@ -22,7 +22,7 @@ casbin = "*"
 aiopg = "*"
 alembic = "*"
 aio-pubsub = "*"
-urouter = "*"
+urouter = "==0.1.2"
 click = "*"
 
 [dev-packages]

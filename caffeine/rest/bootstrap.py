@@ -22,10 +22,12 @@ from caffeine.common.store.postgresql.db import PostgreSQLDb
 from caffeine.common.store.postgresql.pubsub import PubSubStore
 from caffeine.common.store.postgresql.user import PostgreSQLUserStore
 from caffeine.common.template import Templater
-from caffeine.rest.auth import JwtAuthBackend, need_auth
+from caffeine.rest.auth import JwtAuthBackend
 from caffeine.rest.handlers.app.handlers import AppHandler
+from caffeine.rest.handlers.app.routers import AppRouter
 from caffeine.rest.handlers.exception_handlers import ExceptionHandlers
 from caffeine.rest.handlers.users.handlers import UserHandler
+from caffeine.rest.handlers.users.routers import UserRouter
 from caffeine.rest.logger import logger
 from caffeine.rest.containers import SecurityContainer
 from caffeine.rest.utils.captcha import Recaptcha
@@ -95,39 +97,9 @@ class WebBaseBootstrap(BaseBootstrap):
             self.app, backend=JwtAuthBackend(user_service, security_container.jwt_helper)
         )
         router = StarletteRouter(self.app)
-        public_router = router.make_router()
-        private_router = router.make_router().use(auth_middleware)
+        user_routers = UserRouter(user_handler, auth_middleware, router)
+        app_routers = AppRouter(app_handler, router)
 
-        def user_routes():
-            user_private_router = private_router.make_router()
-            u = user_private_router.make_router()
-            u.get("/{uid:str}/", need_auth(user_handler.get_by_id, ["admin"]))
-            u.get("/{uid:str}/change_status", need_auth(user_handler.change_status, ["admin"]))
-            u.get("/{uid:str}/change_type", need_auth(user_handler.change_type, ["admin"]))
-            user_private_router.mount("/u", u)
-            user_private_router.get("/me", need_auth(user_handler.get_by_id))
-
-            user_public_router = router.make_router()
-            user_public_router.post("/register", user_handler.register)
-            user_public_router.get("/activate/{token:str}", user_handler.activate)
-            user_public_router.post("/reset-password", user_handler.reset_password_request)
-            user_public_router.get("/reset-password/{token:str}", user_handler.reset_password_check)
-            user_public_router.post("/reset-password/{token:str}", user_handler.reset_password)
-            user_public_router.post("/search", user_handler.search)
-            user_public_router.post("/auth", user_handler.auth)
-            user_public_router.post("/refresh", user_handler.refresh)
-
-            user_router = router.make_router()
-            user_router.mount("/user", user_public_router)
-            user_router.mount("/user", user_private_router)
-            return user_router
-
-        def app_routes():
-            app_router = public_router.make_router()
-            app_router.get("/info", app_handler.app_info)
-            app_router.get("/health", app_handler.health)
-            return app_router
-
-        router.mount("/v1", app_routes)
-        router.mount("/v1", user_routes)
+        router.mount("/v1", app_routers.init())
+        router.mount("/v1", user_routers.init())
         router.export()
