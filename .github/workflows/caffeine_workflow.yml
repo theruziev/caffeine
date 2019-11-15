@@ -20,6 +20,9 @@ jobs:
         make install
         python --version ; pip --version ; pipenv --version
         pipenv run ./scripts/version
+    - name: Docker compose up 
+      run: |
+        make dco-up
     - name: Lint code
       run: |
         make lint
