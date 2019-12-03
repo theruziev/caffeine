@@ -22,6 +22,7 @@ jobs:
         pipenv run ./scripts/version
     - name: Docker compose up 
       run: |
+        make create-env
         make dco-up
     - name: Lint code
       run: |
