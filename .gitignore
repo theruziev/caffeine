@@ -69,5 +69,6 @@ dmypy.json
 
 # Project
 resfull.local.http
+docker-compose.yml
 
 # End of https://www.gitignore.io/api/python,pycharm

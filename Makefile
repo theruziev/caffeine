@@ -5,6 +5,10 @@ dco-rm:
 	 docker-compose down
 	 docker-compose rm -f
 
+create-env:
+	cp docker-compose.dev.yml docker-compose.yml
+	cp .env.example .env
+
 install:
 	pipenv install --dev
 
