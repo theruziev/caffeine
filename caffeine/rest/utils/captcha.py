@@ -6,7 +6,7 @@ class Recaptcha:
 
     def __init__(self, secret):
         self.secret = secret
-        self.session = httpx.AsyncClient()
+        self.session = httpx.Client()
 
     async def check(self, response):
         response = await self.session.post(
