@@ -13,7 +13,6 @@ uvicorn = "*"
 aiofiles = "*"
 pyyaml = "*"
 pendulum = "*"
-caffeine = {editable = true,path = "."}
 httpx = "*"
 async-sender = "*"
 jinja2 = "*"
