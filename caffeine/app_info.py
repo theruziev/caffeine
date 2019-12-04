@@ -1,5 +1,5 @@
-version = "1.16.0"
-commit_hash = "4d27af16088a0fc720e92eef11f4e55d12efaad7"
+version = "1.16.1"
+commit_hash = "e213bfbf40daee27713a6f6372fdd72b685ca87d"
 name = "caffeine"
 
 release_name = f"{name}@{version} ({commit_hash[:6]})"
