@@ -1,7 +1,7 @@
 from logging.config import fileConfig
 
 from environs import Env
-from sqlalchemy import engine_from_config
+from sqlalchemy import engine_from_config, create_engine
 from sqlalchemy import pool
 
 from alembic import context
@@ -36,7 +36,7 @@ target_metadata = postgresql.db.metadata
 def get_url():
     env = Env()
     env.read_env()
-    return env("DB_DSN", "dbname=postgres user=postgres host=127.0.0.1")
+    return env("DB_DSN", "postgres://postgres@127.0.0.1/postgres")
 
 
 def run_migrations_offline():
@@ -70,9 +70,7 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section), prefix="sqlalchemy.", poolclass=pool.NullPool
-    )
+    connectable = create_engine(get_url())
 
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)

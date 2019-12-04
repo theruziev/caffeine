@@ -12,7 +12,6 @@ class Settings:
     JWT_TOKEN_EXPIRE = 600
     JWT_TOKEN_REFRESH_EXPIRE = 36000
     RECAPTCHA_SECRET = None
-    BROKER = ""
     TEMPLATE_PATH = None
 
     MAIL_SERVER = ""
@@ -33,7 +32,7 @@ class Settings:
     def read_env(self):
         env = self.env
         env.read_env()
-        self.DEBUG = env.bool("DEBUG")
+        self.DEBUG = env.bool("DEBUG", True)
         self.SECRET_KEY = Secret(env("SECRET_KEY"))
         self.SENTRY_URL = env("SENTRY_URL")
         self.DB_DSN = Secret(env("DB_DSN"))
@@ -46,12 +45,11 @@ class Settings:
 
         self.RECAPTCHA_SECRET = env("RECAPTCHA_SECRET")
         self.TEMPLATE_PATH = env("TEMPLATE_PATH")
-        self.BROKER = env("BROKER")
 
         self.MAIL_SERVER = env("MAIL_SERVER")
         self.MAIL_USERNAME = env("MAIL_USERNAME")
         self.MAIL_PASSWORD = Secret(env("MAIL_PASSWORD"))
-        self.MAIL_PORT = env.int("MAIL_PORT")
-        self.MAIL_USESTARTTLS = env.bool("MAIL_USESTARTTLS")
+        self.MAIL_PORT = env.int("MAIL_PORT", 993)
+        self.MAIL_USESTARTTLS = env.bool("MAIL_USESTARTTLS", True)
         self.ACTIVATION_LINK_TEMPLATE = env.str("ACTIVATION_LINK_TEMPLATE")
         self.RESET_PASSWORD_LINK_TEMPLATE = env.str("RESET_PASSWORD_LINK_TEMPLATE")
