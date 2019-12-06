@@ -31,3 +31,11 @@ jobs:
     - name: Test
       run: |
         make test
+
+    - name: Setup nodejs
+      uses: actions/setup-node@v1.1.0
+    - name: Lint and test frontend
+      run: |
+        cd frontend
+        yarn install
+        yarn test
