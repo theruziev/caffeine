@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "Private",
   "scripts": {
+    "build": "parcel build src/index.html",
     "start": "parcel src/index.html",
     "format": "standard src/**/*.js --fix",
     "test": "standard src/**/*.js && jest"

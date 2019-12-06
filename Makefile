@@ -37,4 +37,6 @@ test-parallel: dco-up migrate
 app-version:
 	 ./scripts/version
 
-
+build-front:
+	 cd frontend && yarn install
+	 cd frontend && yarn build
