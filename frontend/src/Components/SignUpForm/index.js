@@ -2,7 +2,7 @@ import React from 'react'
 
 import useForm from 'react-hook-form'
 
-export default function SignInForm () {
+export default function SignUpForm () {
   const { register, handleSubmit, errors } = useForm()
   const onSubmit = data => console.log(data)
 
@@ -27,9 +27,21 @@ export default function SignInForm () {
 
       </div>
 
+      <div className='field'>
+        <label className='label'>Repeat Password</label>
+        <div className='control'>
+          <input
+            ref={register({ required: true })} className={`input ${errors.repeat_password && 'is-danger'}`}
+            name='repeat_password' type='password' placeholder='Repeat you password'
+          />
+        </div>
+        {errors.password && <p className='help is-danger'>The password is required</p>}
+
+      </div>
+
       <div className='field  is-grouped is-grouped-right'>
         <div className='control'>
-          <button className='button is-primary' type='submit'>Submit</button>
+          <button className='button is-primary' type='submit'>Sign Up</button>
         </div>
       </div>
     </form>

@@ -54,9 +54,11 @@ export default class NavBar extends Component {
             <NavLink to='/' className='navbar-item'>
                             Home
             </NavLink>
-
+            <NavLink to='/signup'>
+                            Sign Up
+            </NavLink>
             <NavLink to='/login'>
-                            Login
+                            Sign In
             </NavLink>
             <NavLink to='/not-found'>
                             Not Found
