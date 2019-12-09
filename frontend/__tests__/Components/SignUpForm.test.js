@@ -2,12 +2,22 @@
 import React from "react";
 import renderer from 'react-test-renderer';
 import SignUpForm from '../../src/Components/SignUpForm'
+import { shallow } from 'enzyme'
 
 
-it("Render SignUpForm", () => {
-  const component = renderer.create(<SignUpForm />);
-  const componentJSON = component.toJSON();
-  expect(componentJSON.type).toEqual("form");
-  expect(componentJSON.children.length).toEqual(4);
 
-});
+describe('<SignUpForm />', function () {
+
+  it('snapshot renders', () => {
+    const component = renderer.create(<SignUpForm/>);
+    let componentJSON = component.toJSON();
+    expect(componentJSON).toMatchSnapshot();
+  });
+
+  it('render 2 input', () => {
+    const component = shallow(<SignUpForm/>);
+    expect(component.find('input').length).toEqual(3);
+  });
+
+
+})

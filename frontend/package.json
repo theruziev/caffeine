@@ -8,6 +8,11 @@
     "format": "standard src/**/*.js --fix",
     "test": "standard src/**/*.js && jest"
   },
+
+  "jest": {
+    "setupFiles": ["./src/setupTests.js"]
+  },
+
   "dependencies": {
     "@reach/router": "^1.2.1",
     "autoprefixer": "^9.7.3",
@@ -26,6 +31,8 @@
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
     "babel-jest": "^24.9.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
     "jest": "^24.9.0",
     "parcel-bundler": "^1.12.4",
     "postcss-modules": "^1.4.1",

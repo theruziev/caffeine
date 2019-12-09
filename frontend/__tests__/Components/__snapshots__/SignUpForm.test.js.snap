@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SignUpForm /> snapshot renders 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Email
+    </label>
+    <div
+      className="control"
+    >
+      <input
+        className="input undefined"
+        name="username"
+        placeholder="cafe@ephiopia.com"
+        type="text"
+      />
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Password
+    </label>
+    <div
+      className="control"
+    >
+      <input
+        className="input undefined"
+        name="password"
+        placeholder="You password"
+        type="password"
+      />
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Repeat Password
+    </label>
+    <div
+      className="control"
+    >
+      <input
+        className="input undefined"
+        name="repeat_password"
+        placeholder="Repeat you password"
+        type="password"
+      />
+    </div>
+  </div>
+  <div
+    className="field  is-grouped is-grouped-right"
+  >
+    <div
+      className="control"
+    >
+      <button
+        className="button is-primary"
+        type="submit"
+      >
+        Sign Up
+      </button>
+    </div>
+  </div>
+</form>
+`;

@@ -2,9 +2,13 @@ import React from 'react'
 
 import useForm from 'react-hook-form'
 
-export default function SignUpForm () {
-  const { register, handleSubmit, errors } = useForm()
-  const onSubmit = data => console.log(data)
+export default function SignUpForm (props) {
+  const { register, handleSubmit, errors, setError } = useForm()
+  const onSubmit = data => {
+    if (data.password !== data.repeat_password) {
+      setError('repeat_password', 'notMatch', 'Password and repeat password is not match.')
+    }
+  }
 
   return (
 
@@ -35,7 +39,7 @@ export default function SignUpForm () {
             name='repeat_password' type='password' placeholder='Repeat you password'
           />
         </div>
-        {errors.password && <p className='help is-danger'>The password is required</p>}
+        {errors.repeat_password && <p className='help is-danger'>{errors.repeat_password.message}</p>}
 
       </div>
 
