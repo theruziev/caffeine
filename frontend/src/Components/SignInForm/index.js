@@ -2,9 +2,9 @@ import React from 'react'
 
 import useForm from 'react-hook-form'
 
-export default function SignInForm () {
+export default function SignInForm (props) {
   const { register, handleSubmit, errors } = useForm()
-  const onSubmit = data => console.log(data)
+  const onSubmit = data => props.onSubmit(data)
 
   return (
 

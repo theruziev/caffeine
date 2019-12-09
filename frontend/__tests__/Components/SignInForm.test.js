@@ -1,13 +1,20 @@
-
-import React from "react";
+import React from 'react'
 import SignInForm from '../../src/Components/SignInForm'
-import renderer from 'react-test-renderer';
+import renderer from 'react-test-renderer'
+import { shallow } from 'enzyme'
+
+describe('<SignInForm />', function () {
+
+  it('snapshot renders', () => {
+    const component = renderer.create(<SignInForm/>);
+    let componentJSON = component.toJSON();
+    expect(componentJSON).toMatchSnapshot();
+  });
+
+  it('render 2 input', () => {
+    const component = shallow(<SignInForm/>);
+    expect(component.find('input').length).toEqual(2);
+  });
 
 
-it("Render SignInForm", () => {
-  const component = renderer.create(<SignInForm />);
-  const componentJSON = component.toJSON();
-  expect(componentJSON.type).toEqual("form");
-  expect(componentJSON.children.length).toEqual(3);
-
-});
+})
