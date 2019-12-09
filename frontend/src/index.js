@@ -6,6 +6,7 @@ import './index.scss'
 import Home from './Containers/Home'
 import NotFound from './Containers/NotFound'
 import SignIn from './Containers/SignIn'
+import SignUp from './Containers/SignUp'
 
 export class App extends Component {
   render () {
@@ -13,6 +14,7 @@ export class App extends Component {
       <Router>
         <Home path='/' />
         <SignIn path='/login' />
+        <SignUp path='/signup' />
         <NotFound path='/not-found' default />
       </Router>)
   }
