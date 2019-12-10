@@ -5,9 +5,10 @@ import useForm from 'react-hook-form'
 export default function SignUpForm (props) {
   const { register, handleSubmit, errors, setError } = useForm()
   const onSubmit = data => {
-    if (data.password !== data.repeat_password) {
+    if (data.password !== data.repeatPassword) {
       setError('repeat_password', 'notMatch', 'Password and repeat password is not match.')
     }
+    props.onSubmit(data)
   }
 
   return (
@@ -35,11 +36,11 @@ export default function SignUpForm (props) {
         <label className='label'>Repeat Password</label>
         <div className='control'>
           <input
-            ref={register({ required: true })} className={`input ${errors.repeat_password && 'is-danger'}`}
-            name='repeat_password' type='password' placeholder='Repeat you password'
+            ref={register({ required: true })} className={`input ${errors.repeatPassword && 'is-danger'}`}
+            name='repeatPassword' type='password' placeholder='Repeat you password'
           />
         </div>
-        {errors.repeat_password && <p className='help is-danger'>{errors.repeat_password.message}</p>}
+        {errors.repeatPassword && <p className='help is-danger'>{errors.repeatPassword.message}</p>}
 
       </div>
 

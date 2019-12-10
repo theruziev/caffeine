@@ -15,7 +15,7 @@ export default function SignInForm (props) {
         <div className='control'>
           <input ref={register({ required: true })} className={`input ${errors.username && 'is-danger'}`} name='username' type='text' placeholder='cafe@ephiopia.com' />
         </div>
-        {errors.username && <p className='help is-danger'>Username or password is required</p>}
+        {errors.username && <p className='help is-danger'>Username is required</p>}
       </div>
 
       <div className='field'>
