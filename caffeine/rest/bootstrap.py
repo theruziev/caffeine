@@ -11,7 +11,7 @@ from starlette.middleware.authentication import AuthenticationMiddleware
 from urouter.exporters.starlette_exporter import StarletteRouter
 
 from caffeine import app_info
-from caffeine.common.bootstrap import BaseBootstrap
+from caffeine.common.abc.bootstrap import BaseBootstrap
 from caffeine.common.pubsub import PostgresPubSub
 from caffeine.common.security.casbin import Enforcer
 from caffeine.common.security.jwt import JwtHelper
@@ -33,7 +33,7 @@ from caffeine.rest.containers import SecurityContainer
 from caffeine.rest.utils.captcha import Recaptcha
 
 
-class WebBaseBootstrap(BaseBootstrap):
+class RestBootstrap(BaseBootstrap):
     def __init__(self, app, settings: Settings):
         self.app: Starlette = app
         self.settings: Settings = settings
