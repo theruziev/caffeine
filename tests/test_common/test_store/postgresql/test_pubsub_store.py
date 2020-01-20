@@ -30,6 +30,5 @@ async def test_get_msg(db):
     new_msgs = [gen_pubsub_msg("test_channel") for r in range(5)]
     uuids = [m.uuid for m in new_msgs]
     await store.add(*new_msgs)
-    async with store.get_msg("test_channel", 10) as msg:
-        for m in msg:
-            assert m.uuid in uuids
+    res_uuids = [m.uuid async for msg in store.get_msg("test_channel", 100) for m in msg]
+    assert uuids == res_uuids

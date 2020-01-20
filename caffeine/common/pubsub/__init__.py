@@ -15,13 +15,7 @@ class PubSubSubscriber(Subscriber):
         self.batch = batch
 
     def __aiter__(self):
-        return self
-
-    async def __anext__(self):
-        while True:
-            async with self.store.get_msg(self.channel, batch=self.batch) as msg:
-                if msg:
-                    return msg
+        return self.store.get_msg(self.channel, batch=self.batch)
 
 
 class PostgresPubSub(PubSub):

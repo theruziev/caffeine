@@ -1,6 +1,3 @@
-from contextlib import asynccontextmanager
-
-
 import pendulum
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import JSONB
@@ -41,21 +38,22 @@ class PubSubStore:
         async with self.db.engine.acquire() as conn:
             await conn.execute(q)
 
-    @asynccontextmanager
     async def get_msg(self, channel, batch=1):
-        q = (
-            pubsub_table.select()
-            .where(sa.and_(pubsub_table.c.channel == channel, pubsub_table.c.is_done.is_(False)))
-            .limit(batch)
-            .with_for_update(skip_locked=True)
-        )
         async with self.db.engine.acquire() as conn:
+            q = (
+                pubsub_table.select()
+                .where(
+                    sa.and_(pubsub_table.c.channel == channel, pubsub_table.c.is_done.is_(False))
+                )
+                .limit(batch)
+                .with_for_update(skip_locked=True)
+            )
+
             async with conn.begin():
-                try:
-                    msg_db = await conn.execute(q)
-                    msgs = [self._make_msg(msg) async for msg in msg_db]
+                msg_db = await conn.execute(q)
+                msgs = [self._make_msg(msg) async for msg in msg_db]
+                if msgs:
                     yield msgs[0] if batch == 1 and msgs else msgs
-                finally:
                     make_done_msg_query = (
                         pubsub_table.update()
                         .values(updated_at=pendulum.now().int_timestamp, is_done=True)
@@ -64,6 +62,7 @@ class PubSubStore:
                             & (pubsub_table.c.is_done.is_(False))
                         )
                     )
+
                     await conn.execute(make_done_msg_query)
 
     @classmethod

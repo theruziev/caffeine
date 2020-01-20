@@ -24,12 +24,12 @@ class MockResponse:
 async def test_captcha(code, status, result):
     r = Recaptcha("SECRET_KEY")
     await r.shutdown()
-    r.session = Mock(httpx.Client)
+    r.client = Mock(httpx.AsyncClient)
 
     async def side_effect(*args, **kwargs):
         return MockResponse(code, {"success": status})
 
-    r.session.post.side_effect = side_effect
+    r.client.post.side_effect = side_effect
     res = await r.check("blah")
     assert res == result
 

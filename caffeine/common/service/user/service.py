@@ -78,7 +78,7 @@ class UserService:
         except DoesNotExistException:
             raise UserNotExistError(f"User with token: {token} does not exist.")
 
-    async def reset_password(self, user: User, password: str):
+    async def reset_password(self, user: User, password: str) -> User:
         user.password = bcrypt_hash(password)
         user.touch()
         return await self.user_store.update(user)
@@ -93,18 +93,18 @@ class UserService:
 
         raise UserNotExistError(f"User with email: {schema.email} does not exist.")
 
-    async def get_by_id(self, uid: str):
+    async def get_by_id(self, uid: str) -> User:
         try:
             return await self.user_store.find_by_id(uid)
         except DoesNotExistException:
             raise UserNotExistError(f"User: '{uid}' does'nt exist")
 
-    async def change_status(self, user: User, status: UserStatusEnum):
+    async def change_status(self, user: User, status: UserStatusEnum) -> User:
         user.status = status
         user.touch()
         return await self.user_store.update(user)
 
-    async def change_type(self, user: User, user_type: UserTypeEnum):
+    async def change_type(self, user: User, user_type: UserTypeEnum) -> User:
         user.type = user_type
         user.touch()
         return await self.user_store.update(user)
@@ -114,7 +114,7 @@ class UserService:
     ) -> Tuple[List[User], int]:
         return await self.user_store.search(user_filter, sort, paginator)
 
-    async def _send_register_email(self, user: User):
+    async def _send_register_email(self, user: User) -> None:
         activation_link = "{}{}".format(
             self.settings.ACTIVATION_LINK_TEMPLATE, user.activation_code
         )
@@ -124,7 +124,7 @@ class UserService:
         msg = EmailMessage(to=user.email, subject="Registration User", html=body)
         await self.pubsub.publish("reg_email", msg.dict())
 
-    async def _send_reset_password_email(self, user: User):
+    async def _send_reset_password_email(self, user: User) -> None:
         reset_password_link = "{}{}".format(
             self.settings.RESET_PASSWORD_LINK_TEMPLATE, user.reset_password_code
         )
