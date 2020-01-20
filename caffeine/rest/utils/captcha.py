@@ -6,10 +6,10 @@ class Recaptcha:
 
     def __init__(self, secret):
         self.secret = secret
-        self.session = httpx.Client()
+        self.client = httpx.AsyncClient()
 
     async def check(self, response):
-        response = await self.session.post(
+        response = await self.client.post(
             self.url, data={"response": response, "secret": self.secret}
         )
 
@@ -20,4 +20,4 @@ class Recaptcha:
         return data.get("success", False)
 
     async def shutdown(self):
-        await self.session.close()
+        await self.client.aclose()

@@ -163,7 +163,7 @@ class PostgreSQLUserStore(UserStore):
             user_db = await res.fetchone()
             if not user_db:
                 raise DoesNotExistException(
-                    f"User with reset_password_code: {reset_password_code} doesn't exist."
+                    f"User with reset_password_code: {reset_password_code} does'nt exist."
                 )
 
             return self._make_user(user_db)

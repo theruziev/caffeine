@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+DIRECTORY=`dirname $0`
+WRAPPER="=============================="
+echo $WRAPPER
+python --version
+$DIRECTORY/version
+echo $WRAPPER
+python caffeine/cli $@

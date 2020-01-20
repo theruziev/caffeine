@@ -6,12 +6,12 @@ class HealthService:
     def __init__(self, db: PostgreSQLDb):
         self.db = db
 
-    async def check(self):
+    async def check(self) -> dict:
         res = {"postgresql_connection": await self.postgres_connection_check()}
 
         return res
 
-    async def postgres_connection_check(self):
+    async def postgres_connection_check(self) -> bool:
         try:
             async with self.db.engine.acquire() as conn:
                 await conn.execute("SELECT 1;")

@@ -1,20 +1,20 @@
 import asyncio
 
+from aio_pubsub.interfaces import PubSub
 from async_sender import Mail, Message, Attachment
 
 from caffeine.common.abc.job import BaseJob
 from caffeine.common.logger import logger
-from caffeine.common.pubsub import PubSubSubscriber
 from caffeine.common.schema.mail import EmailMessage
 from caffeine.common.store.pubsub import PubSubMessage
 
 
 class EmailJob(BaseJob):
-    def __init__(self, subscriber: PubSubSubscriber, email: Mail):
-        self.subscriber = subscriber
+    def __init__(self, pubsub: PubSub, email: Mail):
+        self.pubsub = pubsub
         self.email = email
 
-    async def send_email(self, msg: PubSubMessage):
+    async def send_email(self, msg: PubSubMessage) -> None:
 
         email = EmailMessage(**msg.data)
 
@@ -23,7 +23,7 @@ class EmailJob(BaseJob):
             to=email.to,
             body=email.body,
             html=email.html,
-            from_address=email.from_address,
+            from_address=email.from_address or self.email.from_address,
             cc=email.cc,
             bcc=email.bcc,
             reply_to=email.reply_to,
@@ -42,8 +42,15 @@ class EmailJob(BaseJob):
         await self.email.send(email_raw)
 
     async def listen(self):
-        async for msg in self.subscriber:
-            logger.debug(msg.dict())
-            await self.send_email(msg)
-            logger.debug("Message successful sent")
-            await asyncio.sleep(0.1)
+        subscriber = await self.pubsub.subscribe("emails")
+        while True:
+            async for msg in subscriber:
+                try:
+                    logger.debug(msg.dict())
+                    await self.send_email(msg)
+                    logger.debug("Message successful sent")
+                    await asyncio.sleep(0.1)
+                except Exception as e:
+                    logger.error("{}: {}".format(str(e), msg.dict()))
+                    await self.pubsub.publish("emails", msg.data)
+            await asyncio.sleep(0.5)
