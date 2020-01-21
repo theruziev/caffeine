@@ -122,7 +122,7 @@ class UserService:
             "/email/register.html", {"activation_link": activation_link}
         )
         msg = EmailMessage(to=user.email, subject="Registration User", html=body)
-        await self.pubsub.publish("reg_email", msg.dict())
+        await self.pubsub.publish("emails", msg.dict())
 
     async def _send_reset_password_email(self, user: User) -> None:
         reset_password_link = "{}{}".format(
@@ -132,4 +132,4 @@ class UserService:
             "email/reset_password.html", {"reset_password_link": reset_password_link}
         )
         msg = EmailMessage(to=user.email, subject="Reset User", html=body)
-        await self.pubsub.publish("reset_email", msg.dict())
+        await self.pubsub.publish("emails", msg.dict())

@@ -45,6 +45,7 @@ async def send_email_job(
 def send_email(
     dsn, hostname, use_tls, use_starttls, username, password, from_address, port=1025,
 ):
+    click.echo("Running email-sender job")
     asyncio.run(
         send_email_job(dsn, hostname, port, use_tls, use_starttls, username, password, from_address)
     )
