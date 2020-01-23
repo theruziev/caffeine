@@ -8,10 +8,7 @@ from async_sender import Mail
 from asynctest import Mock
 
 from caffeine.common.job.email import EmailJob
-from caffeine.common.pubsub import PostgresPubSub
 from caffeine.common.schema.mail import EmailMessage
-from caffeine.common.store.postgresql.db import PostgreSQLDb
-from caffeine.common.store.postgresql.pubsub import PubSubStore
 from caffeine.common.store.pubsub import PubSubMessage
 
 

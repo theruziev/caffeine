@@ -35,6 +35,7 @@ class User(BaseModel):
     reset_password_code: str = None
     created_at: int
     updated_at: int
+    ref_id: int = None
 
     def touch(self):
         self.updated_at = now().int_timestamp
@@ -54,6 +55,7 @@ class UserFilter(BaseModel):
     type: UserTypeEnum = None
     created_at_from: int = None
     created_at_to: int = None
+    ref_id: int = None
 
 
 class UserStore(metaclass=ABCMeta):

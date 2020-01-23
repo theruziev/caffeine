@@ -8,7 +8,7 @@ from caffeine.common.store.pubsub import PubSubMessage
 pubsub_table = sa.Table(
     "pubsub",
     metadata,
-    sa.Column("uuid", sa.String(36), index=True),
+    sa.Column("uuid", sa.String(36), index=True, unique=True),
     sa.Column("channel", sa.String(256)),
     sa.Column("data", JSONB(), default=None, nullable=True),
     sa.Column("created_at", sa.Integer()),

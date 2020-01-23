@@ -20,6 +20,7 @@ user_table = sa.Table(
     sa.Column("reset_password_code", sa.String(256), nullable=True, default=None),
     sa.Column("created_at", sa.Integer),
     sa.Column("updated_at", sa.Integer),
+    sa.Column("ref_id", sa.Integer, nullable=True, default=None),
 )
 
 
