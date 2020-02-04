@@ -147,8 +147,6 @@ class UserHandler(Handler):
         )
 
     async def auth(self, request: Request):
-        if request.user.is_authenticated:
-            return self.forbidden()
         data = await request.json()
         user_login = UserLoginRequest(**data)
         try:

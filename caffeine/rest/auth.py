@@ -36,14 +36,15 @@ class User(SimpleUser):
 
 
 class JwtAuthBackend(AuthenticationBackend):
-    def __init__(self, user_service: UserService, jwt_helper: JwtHelper):
+    def __init__(self, user_service: UserService, jwt_helper: JwtHelper, jwt_cookie_key):
         self.user_service = user_service
         self.jwt_helper = jwt_helper
+        self.jwt_cookie_key = jwt_cookie_key
 
     async def authenticate(self, request: Request):
 
         try:
-            token = request.cookies.get("Authorization")
+            token = request.cookies.get(self.jwt_cookie_key)
             data = self.jwt_helper.decode(token)
             user = await self.user_service.get_by_id(data.get("sub"))
             scopes = data.get("scp", [])
