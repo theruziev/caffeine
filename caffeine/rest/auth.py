@@ -1,6 +1,5 @@
 from enum import Enum
 
-from requests import Request
 from starlette.authentication import (
     AuthenticationBackend,
     AuthenticationError,
@@ -8,6 +7,7 @@ from starlette.authentication import (
     AuthCredentials,
     requires,
 )
+from starlette.requests import Request
 
 from caffeine.common.security.jwt import JwtHelper
 from caffeine.common.service.user.service import UserService
