@@ -25,7 +25,6 @@ class UserRouter:
 
         user_private_router.mount("/u", u)
         user_private_router.get("/me", need_auth(self.user_handler.get_by_id))
-        user_private_router.post("/auth", self.user_handler.auth)
 
         user_public_router = self.router.make_router()
         user_public_router.post("/register", self.user_handler.register)
@@ -37,6 +36,7 @@ class UserRouter:
         user_public_router.post("/reset-password/{token:str}", self.user_handler.reset_password)
         user_public_router.post("/search", self.user_handler.search)
         user_public_router.post("/refresh", self.user_handler.refresh)
+        user_public_router.post("/auth", self.user_handler.auth)
 
         user_router = self.router.make_router()
         user_router.mount("/user", user_public_router)

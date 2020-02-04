@@ -8,9 +8,14 @@ class Settings:
     SECRET_KEY = None
     SENTRY_URL = ""
     DB_DSN = ""
+
     JWT_SECRET = None
     JWT_TOKEN_EXPIRE = 600
     JWT_TOKEN_REFRESH_EXPIRE = 36000
+    JWT_COOKIE_EXPIRE = 2592000
+    JWT_COOKIE_KEY = "Authorization"
+    JWT_COOKIE_REFRESH_KEY = "RefreshToken"
+
     RECAPTCHA_SECRET = None
     TEMPLATE_PATH = None
 
@@ -40,6 +45,10 @@ class Settings:
         self.JWT_SECRET = Secret(env("JWT_SECRET"))
         self.JWT_TOKEN_EXPIRE = env.int("JWT_TOKEN_EXPIRE")
         self.JWT_TOKEN_REFRESH_EXPIRE = env.int("JWT_TOKEN_REFRESH_EXPIRE")
+        self.JWT_COOKIE_EXPIRE = env.int("JWT_COOKIE_EXPIRE", 2592000)
+        self.JWT_COOKIE_KEY = env.int("JWT_COOKIE_KEY", "Authorization")
+        self.JWT_COOKIE_REFRESH_KEY = env.int("JWT_COOKIE_REFRESH_KEY", "RefreshToken")
+
         self.CASBIN_MODEL = env("CASBIN_MODEL")
         self.CASBIN_POLICY = env("CASBIN_POLICY")
 

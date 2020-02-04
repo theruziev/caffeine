@@ -1,17 +1,21 @@
+import typing
+from time import time
+
 from pendulum import now
 from starlette.requests import Request
 
+from caffeine.common.service.user.errors import UserExistError, UserNotExistError
 from caffeine.common.service.user.schema import (
     RegisterUserSchema,
     ResetPasswordRequestSchema,
     LoginSchema,
 )
-from caffeine.common.service.user.errors import UserExistError, UserNotExistError
 from caffeine.common.service.user.service import UserService
 from caffeine.common.settings import Settings
 from caffeine.common.store import Paginator
 from caffeine.common.store.user import UserFilter, UserSort, User
 from caffeine.rest.auth import SystemScopes
+from caffeine.rest.containers import SecurityContainer
 from caffeine.rest.handlers import Handler
 from caffeine.rest.handlers.exception_handlers import NotFoundError
 from caffeine.rest.handlers.users.schemas import (
@@ -27,7 +31,6 @@ from caffeine.rest.handlers.users.schemas import (
     Token,
 )
 from caffeine.rest.logger import logger
-from caffeine.rest.containers import SecurityContainer
 from caffeine.rest.utils.captcha import Recaptcha
 
 
@@ -41,6 +44,7 @@ class UserHandler(Handler):
     ):
         self.user_service = user_service
         self.jwt_helper = security.jwt_helper
+        self.security = security
         self.token_expire = settings.JWT_TOKEN_EXPIRE
         self.refresh_token_expire = settings.JWT_TOKEN_REFRESH_EXPIRE
         self.recaptcha = recaptcha
@@ -143,32 +147,41 @@ class UserHandler(Handler):
         )
 
     async def auth(self, request: Request):
-        if request.user.is_authenticated:
-            return self.forbidden()
         data = await request.json()
         user_login = UserLoginRequest(**data)
         try:
             schema = LoginSchema(**user_login.dict())
             user = await self.user_service.auth(schema)
-            return self.json(self._gen_token(user))
+            return self._token_response(user)
         except UserNotExistError:
             return self.need_auth()
 
     async def refresh(self, request: Request):
-        data = await request.json()
-        token = Token(**data)
+        token = Token(token=request.cookies.get("RefreshToken"))
         try:
             payload = self.jwt_helper.decode(token.token)
             scopes = payload.get("scp") or []
             if SystemScopes.refresh not in scopes:
                 return self.forbidden()
             user = await self.user_service.get_by_id(payload.get("sub"))
-            return self.json(self._gen_token(user))
+            return self._token_response(user)
         except Exception as e:  # TODO: Use upper level exception
             logger.exception(e)
             return self.forbidden()
 
-    def _gen_token(self, user: User) -> dict:
+    def _token_response(self, user):
+        access_token, refresh_token = self._gen_token(user)
+        response = self.json({"access_token": access_token, "refresh_token": refresh_token})
+        expires = time() + self.security.jwt_cookie_expire
+        response.set_cookie(
+            self.security.jwt_cookie_key, access_token, httponly=True, expires=expires
+        )
+        response.set_cookie(
+            self.security.jwt_cookie_refresh_key, refresh_token, httponly=True, expires=expires
+        )
+        return response
+
+    def _gen_token(self, user: User) -> typing.Tuple[str, str]:
         access_token = self.jwt_helper.encode(
             {"sub": user.id, "exp": now().int_timestamp + self.token_expire, "scp": [user.role]}
         )
@@ -179,8 +192,7 @@ class UserHandler(Handler):
                 "scp": [SystemScopes.refresh],
             }
         )
-
-        return {"access_token": access_token, "refresh_token": refresh_token}
+        return access_token, refresh_token
 
     async def _get_user(self, uid: str) -> User:
         try:
