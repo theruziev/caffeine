@@ -1,5 +1,6 @@
 from enum import Enum
 
+from requests import Request
 from starlette.authentication import (
     AuthenticationBackend,
     AuthenticationError,
@@ -10,6 +11,7 @@ from starlette.authentication import (
 
 from caffeine.common.security.jwt import JwtHelper
 from caffeine.common.service.user.service import UserService
+from caffeine.rest.logger import logger
 
 
 class SystemScopes(str, Enum):
@@ -38,15 +40,10 @@ class JwtAuthBackend(AuthenticationBackend):
         self.user_service = user_service
         self.jwt_helper = jwt_helper
 
-    async def authenticate(self, request):
-        if "Authorization" not in request.headers:
-            return
+    async def authenticate(self, request: Request):
 
-        auth = request.headers["Authorization"]
         try:
-            scheme, token = auth.split()
-            if scheme.lower() != "bearer":
-                return
+            token = request.cookies.get("Authorization")
             data = self.jwt_helper.decode(token)
             user = await self.user_service.get_by_id(data.get("sub"))
             scopes = data.get("scp", [])
@@ -57,5 +54,6 @@ class JwtAuthBackend(AuthenticationBackend):
                 AuthCredentials(scopes + [SystemScopes.authenticated]),
                 User(user.email, user.id, data),
             )
-        except (ValueError, UnicodeDecodeError, Exception):
+        except (ValueError, UnicodeDecodeError, Exception) as e:
+            logger.error(e)
             raise AuthenticationError("Invalid bearer auth credentials")

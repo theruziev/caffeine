@@ -148,10 +148,6 @@ def test_auth(user_service, side_effect, code):
     data = {"email": "email@example.com", "password": "password", "captcha": "blah"}
     response = client.post("v1/user/auth", json=data)
     assert response.status_code == code, response.text
-    user = gen_user()
-    payload = {"sub": user.id}
-    token = jwt_helper.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
 
 
 def test_get_by_id(user_service):
@@ -160,9 +156,9 @@ def test_get_by_id(user_service):
     client = TestClient(app(user_service))
     payload = {"sub": user.id, "scp": [UserRoleEnum.admin]}
     token = jwt_helper.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
+    cookies = {"Authorization": token}
 
-    response = client.get(f"v1/user/u/{user.id}", headers=header)
+    response = client.get(f"v1/user/u/{user.id}", cookies=cookies)
     assert response.status_code == 200
     data = response.json()
     assert user.id == data["id"]
@@ -176,9 +172,9 @@ def test_get_by_id_failed(user_service):
     client = TestClient(app(user_service))
     payload = {"sub": user.id, "scp": [UserRoleEnum.admin]}
     token = jwt_helper.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
+    cookies = {"Authorization": token}
 
-    response = client.get(f"v1/user/u/wrong_id", headers=header)
+    response = client.get(f"v1/user/u/wrong_id", cookies=cookies)
     assert response.status_code == 404, response.text
 
 
@@ -188,9 +184,9 @@ def test_user_me(user_service):
     client = TestClient(app(user_service))
     payload = {"sub": user.id}
     token = jwt_helper.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
+    cookies = {"Authorization": token}
 
-    response = client.get(f"v1/user/me", headers=header)
+    response = client.get(f"v1/user/me", cookies=cookies)
     assert response.status_code == 200
     data = response.json()
     assert user.id == data["id"]
@@ -207,29 +203,26 @@ def test_user_me_wrong_jwt(user_service):
     payload = {"sub": user.id}
     jwt_helper2 = JwtHelper("OTHER_SECRET")
     token = jwt_helper2.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
-    response = client.get(f"v1/user/me", headers=header)
+    cookies = {"Authorization": token}
+    response = client.get(f"v1/user/me", cookies=cookies)
     assert response.status_code == 400
 
     # Expired jwt
     payload = {"sub": user.id, "exp": now().int_timestamp - 10}
     token = jwt_helper2.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
-    response = client.get(f"v1/user/me", headers=header)
+    cookies = {"Authorization": token}
+    response = client.get(f"v1/user/me", cookies=cookies)
     assert response.status_code == 400
 
-    # Wrong header
-    payload = {"sub": user.id}
-    token = jwt_helper.encode(payload)
-    header = {"Authorization": f"sdf {token}"}
-    response = client.get(f"v1/user/me", headers=header)
+    cookies = {"Authorization": f"blah blah"}
+    response = client.get(f"v1/user/me", cookies=cookies)
     assert response.status_code == 403
 
     # Refresh token in auth
     payload = {"sub": user.id, "scp": ["refresh"]}
     token = jwt_helper.encode(payload)
-    header = {"Authorization": f"Bearer {token}"}
-    response = client.get(f"v1/user/me", headers=header)
+    cookies = {"Authorization": token}
+    response = client.get(f"v1/user/me", cookies=cookies)
     assert response.status_code == 403
 
 
@@ -241,7 +234,7 @@ def test_refresh(user_service, scope, status_code):
     payload = {"sub": user.id, "scp": [scope]}
 
     token = jwt_helper.encode(payload)
-    response = client.post("/v1/user/refresh", json={"token": token})
+    response = client.post("/v1/user/refresh", cookies={"RefreshToken": token})
     assert response.status_code == status_code
 
 
@@ -252,13 +245,13 @@ def test_refresh_wrong_token(user_service):
     payload = {"sub": user.id, "scp": [SystemScopes.refresh], "exp": 0}
 
     token = jwt_helper.encode(payload)
-    response = client.post("/v1/user/refresh", json={"token": token})
+    response = client.post("/v1/user/refresh", cookies={"RefreshToken": token})
     assert response.status_code == 403
 
     payload = {"sub": user.id, "scp": [SystemScopes.refresh]}
     jwt_helper2 = JwtHelper("OTHER_SECRET")
     token = jwt_helper2.encode(payload)
-    response = client.post("/v1/user/refresh", json={"token": token})
+    response = client.post("/v1/user/refresh", cookies={"RefreshToken": token})
     assert response.status_code == 403
 
 
