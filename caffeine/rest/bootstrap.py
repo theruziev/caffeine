@@ -1,6 +1,7 @@
 import logging
 from queue import LifoQueue
 from typing import Optional
+
 import casbin
 import sentry_sdk
 from aio_pubsub.interfaces import PubSub
@@ -23,13 +24,13 @@ from caffeine.common.store.postgresql.pubsub import PubSubStore
 from caffeine.common.store.postgresql.user import PostgreSQLUserStore
 from caffeine.common.template import Templater
 from caffeine.rest.auth import JwtAuthBackend
+from caffeine.rest.containers import SecurityContainer
 from caffeine.rest.handlers.app.handlers import AppHandler
 from caffeine.rest.handlers.app.routers import AppRouter
 from caffeine.rest.handlers.exception_handlers import ExceptionHandlers
 from caffeine.rest.handlers.users.handlers import UserHandler
 from caffeine.rest.handlers.users.routers import UserRouter
 from caffeine.rest.logger import logger
-from caffeine.rest.containers import SecurityContainer
 from caffeine.rest.utils.captcha import Recaptcha
 
 
@@ -75,7 +76,8 @@ class RestBootstrap(BaseBootstrap):
         jwt_helper = JwtHelper(str(self.settings.JWT_SECRET))
         e = casbin.Enforcer(self.settings.CASBIN_MODEL, self.settings.CASBIN_POLICY)
         enforcer = Enforcer(e)
-        security_container = SecurityContainer(jwt_helper, enforcer)
+        security_container = SecurityContainer(jwt_helper, enforcer, self.settings.JWT_COOKIE_KEY,
+                                               self.settings.JWT_COOKIE_REFRESH_KEY, self.settings.JWT_COOKIE_EXPIRE)
 
         recaptcha = Recaptcha(self.settings.RECAPTCHA_SECRET)
         self.shutdown_events.put(recaptcha.shutdown)
@@ -94,7 +96,8 @@ class RestBootstrap(BaseBootstrap):
         app_handler = AppHandler(health_service)
 
         auth_middleware = AuthenticationMiddleware(
-            self.app, backend=JwtAuthBackend(user_service, security_container.jwt_helper)
+            self.app,
+            backend=JwtAuthBackend(user_service, security_container.jwt_helper, security_container.jwt_cookie_key)
         )
         router = StarletteRouter(self.app)
         user_routers = UserRouter(user_handler, auth_middleware, router)
