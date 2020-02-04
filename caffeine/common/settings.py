@@ -48,7 +48,7 @@ class Settings:
         self.JWT_COOKIE_EXPIRE = env.int("JWT_COOKIE_EXPIRE", 2592000)
         self.JWT_COOKIE_KEY = env.int("JWT_COOKIE_KEY", "Authorization")
         self.JWT_COOKIE_REFRESH_KEY = env.int("JWT_COOKIE_REFRESH_KEY", "RefreshToken")
-        
+
         self.CASBIN_MODEL = env("CASBIN_MODEL")
         self.CASBIN_POLICY = env("CASBIN_POLICY")
 

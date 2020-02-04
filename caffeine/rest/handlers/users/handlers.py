@@ -36,11 +36,11 @@ from caffeine.rest.utils.captcha import Recaptcha
 
 class UserHandler(Handler):
     def __init__(
-            self,
-            settings: Settings,
-            user_service: UserService,
-            security: SecurityContainer,
-            recaptcha: Recaptcha,
+        self,
+        settings: Settings,
+        user_service: UserService,
+        security: SecurityContainer,
+        recaptcha: Recaptcha,
     ):
         self.user_service = user_service
         self.jwt_helper = security.jwt_helper
@@ -175,8 +175,12 @@ class UserHandler(Handler):
         access_token, refresh_token = self._gen_token(user)
         response = self.json({"access_token": access_token, "refresh_token": refresh_token})
         expires = time() + self.security.jwt_cookie_expire
-        response.set_cookie(self.security.jwt_cookie_key, access_token, httponly=True, expires=expires)
-        response.set_cookie(self.security.jwt_cookie_refresh_key, refresh_token, httponly=True, expires=expires)
+        response.set_cookie(
+            self.security.jwt_cookie_key, access_token, httponly=True, expires=expires
+        )
+        response.set_cookie(
+            self.security.jwt_cookie_refresh_key, refresh_token, httponly=True, expires=expires
+        )
         return response
 
     def _gen_token(self, user: User) -> typing.Tuple[str, str]:
