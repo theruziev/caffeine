@@ -27,7 +27,7 @@ export default function SignInForm (props) {
 
       </div>
 
-      <div className='field  is-grouped is-grouped-right'>
+      <div className='field is-grouped is-grouped-right'>
         <div className='control'>
           <button className='button is-primary' type='submit'>Submit</button>
         </div>
