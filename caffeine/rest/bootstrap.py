@@ -76,8 +76,13 @@ class RestBootstrap(BaseBootstrap):
         jwt_helper = JwtHelper(str(self.settings.JWT_SECRET))
         e = casbin.Enforcer(self.settings.CASBIN_MODEL, self.settings.CASBIN_POLICY)
         enforcer = Enforcer(e)
-        security_container = SecurityContainer(jwt_helper, enforcer, self.settings.JWT_COOKIE_KEY,
-                                               self.settings.JWT_COOKIE_REFRESH_KEY, self.settings.JWT_COOKIE_EXPIRE)
+        security_container = SecurityContainer(
+            jwt_helper,
+            enforcer,
+            self.settings.JWT_COOKIE_KEY,
+            self.settings.JWT_COOKIE_REFRESH_KEY,
+            self.settings.JWT_COOKIE_EXPIRE,
+        )
 
         recaptcha = Recaptcha(self.settings.RECAPTCHA_SECRET)
         self.shutdown_events.put(recaptcha.shutdown)
@@ -97,7 +102,9 @@ class RestBootstrap(BaseBootstrap):
 
         auth_middleware = AuthenticationMiddleware(
             self.app,
-            backend=JwtAuthBackend(user_service, security_container.jwt_helper, security_container.jwt_cookie_key)
+            backend=JwtAuthBackend(
+                user_service, security_container.jwt_helper, security_container.jwt_cookie_key
+            ),
         )
         router = StarletteRouter(self.app)
         user_routers = UserRouter(user_handler, auth_middleware, router)

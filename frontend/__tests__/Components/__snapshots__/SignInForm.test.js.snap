@@ -43,7 +43,7 @@ exports[`<SignInForm /> snapshot renders 1`] = `
         </div>
       </div>
       <div
-        class="field  is-grouped is-grouped-right"
+        class="field is-grouped is-grouped-right"
       >
         <div
           class="control"
