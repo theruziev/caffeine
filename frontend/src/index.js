@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import promiseFinally from "promise.prototype.finally";
 import ReactDOM from 'react-dom'
 import { Router } from '@reach/router'
 import './index.scss'
@@ -7,6 +8,16 @@ import Home from './Containers/Home'
 import NotFound from './Containers/NotFound'
 import SignIn from './Containers/SignIn'
 import SignUp from './Containers/SignUp'
+
+import signInStore from './Store/SignInStore'
+import { Provider } from 'mobx-react'
+
+const stores = {
+  signInStore
+}
+
+// For easier debugging
+window._____APP_STATE_____ = stores;
 
 export class App extends Component {
   render () {
@@ -20,7 +31,12 @@ export class App extends Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+
+promiseFinally.shim();
+
+ReactDOM.render(<Provider {...stores}>
+  <App />
+</Provider>, document.getElementById('root'))
 
 // Hot Module Replacement
 if (module.hot) {
