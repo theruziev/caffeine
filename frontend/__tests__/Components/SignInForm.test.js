@@ -1,4 +1,5 @@
 import React from 'react'
+import 'mutationobserver-shim'
 import SignInForm from '../../src/Components/SignInForm'
 import { act, cleanup, fireEvent, render, waitForElement } from '@testing-library/react'
 

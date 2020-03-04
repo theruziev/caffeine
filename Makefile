@@ -26,7 +26,7 @@ format:
 	pipenv run black -l 100 caffeine/ tests/
 
 run: dco-up
-	 uvicorn caffeine.rest.app:app --reload --lifespan on
+	 uvicorn caffeine.rest.app:app --reload --lifespan on --port 8888
 
 test: dco-up migrate
 	 pipenv run pytest tests

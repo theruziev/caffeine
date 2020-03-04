@@ -1,6 +1,6 @@
 
 import React from "react";
-
+import 'mutationobserver-shim'
 import SignUpForm from '../../src/Components/SignUpForm'
 import { render, cleanup, fireEvent } from '@testing-library/react'
 

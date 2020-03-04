@@ -1,5 +1,5 @@
 import React from 'react'
-
+import ErrorMessage from '../ErrorMessage'
 import useForm from 'react-hook-form'
 
 export default function SignInForm (props) {
@@ -16,7 +16,11 @@ export default function SignInForm (props) {
   return (
 
     <form onSubmit={handleSubmit(onSubmit)}>
-
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <ErrorMessage title={"Error Title"} />
       <div className='field'>
         <label className='label'>Email</label>
         <div className='control'>

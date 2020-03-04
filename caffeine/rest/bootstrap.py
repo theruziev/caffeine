@@ -9,6 +9,7 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.logging import LoggingIntegration
 from starlette.applications import Starlette
 from starlette.middleware.authentication import AuthenticationMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from urouter.exporters.starlette_exporter import StarletteRouter
 
 from caffeine import app_info
@@ -106,10 +107,10 @@ class RestBootstrap(BaseBootstrap):
                 user_service, security_container.jwt_helper, security_container.jwt_cookie_key
             ),
         )
+        self.app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
         router = StarletteRouter(self.app)
         user_routers = UserRouter(user_handler, auth_middleware, router)
         app_routers = AppRouter(app_handler, router)
-
         router.mount("/v1", app_routers.init())
         router.mount("/v1", user_routers.init())
         router.export()

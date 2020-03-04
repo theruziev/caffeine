@@ -14,7 +14,11 @@ export default class SignIn extends Component {
   }
 
   handleSubmit (data) {
-    this.props.signInStore.login(data)
+    this.props.signInStore.login(data).then((data) => {
+      console.log(data)
+    }).catch((error) => {
+      console.error(error)
+    })
   }
 
   render () {

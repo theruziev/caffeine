@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr
 
 from caffeine.common.schema import PasswordStr
 from caffeine.common.store import SortInt
-from caffeine.common.store.user import UserStatusEnum, UserTypeEnum
+from caffeine.common.store.user import UserStatusEnum, UserTypeEnum, UserRoleEnum
 from caffeine.rest.schemas import Paginator
 
 
@@ -46,6 +46,7 @@ class UserResponse(BaseModel):
     created_at: int
     updated_at: int
     status: UserStatusEnum
+    role: UserRoleEnum
     type: UserTypeEnum
 
 

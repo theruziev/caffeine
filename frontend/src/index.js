@@ -10,10 +10,12 @@ import SignIn from './Containers/SignIn'
 import SignUp from './Containers/SignUp'
 
 import signInStore from './Store/SignInStore'
+import userStore from './Store/UserStore'
 import { Provider } from 'mobx-react'
 
 const stores = {
-  signInStore
+  signInStore,
+  userStore
 }
 
 // For easier debugging

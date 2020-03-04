@@ -1,0 +1,13 @@
+
+.errorMessage {
+  .message-body {
+    padding-left: 2rem;
+
+    .errorList {
+      list-style: disc;
+      li {
+        margin-bottom: .3rem;
+      }
+    }
+  }
+}

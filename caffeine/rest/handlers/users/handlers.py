@@ -56,8 +56,8 @@ class UserHandler(Handler):
             return self.error_message("Captcha error", status_code=400)
         try:
             schema = RegisterUserSchema(**register_form.dict())
-            await self.user_service.register(schema)
-            return self.success()
+            user = await self.user_service.register(schema)
+            return self.json(UserResponse(**user.dict()))
         except UserExistError:
             return self.error_message(f"User {register_form.email} already exists", status_code=409)
 
