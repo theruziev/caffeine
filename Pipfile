@@ -25,6 +25,8 @@ urouter = "==0.1.2"
 click = "*"
 gunicorn = "*"
 tabulate = "*"
+fastapi = "*"
+python-multipart = "*"
 
 [dev-packages]
 faker = "*"

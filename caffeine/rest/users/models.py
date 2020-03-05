@@ -5,7 +5,7 @@ from pydantic import BaseModel, EmailStr
 from caffeine.common.schema import PasswordStr
 from caffeine.common.store import SortInt
 from caffeine.common.store.user import UserStatusEnum, UserTypeEnum
-from caffeine.rest.schemas import Paginator
+from caffeine.rest.models import Paginator
 
 
 class UserLoginRequest(BaseModel):
@@ -75,3 +75,4 @@ class UserSearchRequest(BaseModel):
     filter: UserSearchFilter = None
     paginator: Paginator = None
     sort: UserSearchSort = None
+
